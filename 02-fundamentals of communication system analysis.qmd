@@ -1,0 +1,1335 @@
+---
+title: "通信系统分析基础"
+---
+
+## 本章公式整理
+
+
+---
+
+## 2.1 功率信号与能量信号
+
+### 1. 平均功率
+
+若信号为 $f(t)$，则其平均功率定义为
+
+$$
+P=\lim_{T\to\infty}\frac{1}{T}\int_{-T/2}^{T/2}f^2(t)\,dt
+$$
+
+### 2. 能量
+
+信号的能量定义为
+
+$$
+E=\int_{-\infty}^{+\infty}f^2(t)\,dt
+$$
+
+### 3. 判别
+
+- **能量信号**：$0<E<\infty$，且 $P=0$
+- **功率信号**：$0<P<\infty$，且 $E=\infty$
+
+---
+
+## 2.2 周期信号的傅立叶级数
+
+设周期信号满足
+
+$$
+f(t)=f(t+mT)
+$$
+
+其中周期为 $T$，基波角频率为
+
+$$
+\omega=\frac{2\pi}{T}
+$$
+
+### 1. 三角形式
+
+$$
+f(t)=A_0+\sum_{n=1}^{\infty}A_n\cos(n\omega t+\varphi_n)
+$$
+
+也可写成
+
+$$
+f(t)=A_0+\sum_{n=1}^{\infty}a_n\cos(n\omega t)+\sum_{n=1}^{\infty}b_n\sin(n\omega t)
+$$
+
+其中
+
+$$
+A_0=\frac{1}{T}\int_{t_1}^{t_1+T}f(t)\,dt
+$$
+
+$$
+a_n=\frac{2}{T}\int_{t_1}^{t_1+T}f(t)\cos(n\omega t)\,dt
+$$
+
+$$
+b_n=\frac{2}{T}\int_{t_1}^{t_1+T}f(t)\sin(n\omega t)\,dt
+$$
+
+$$
+A_n=\sqrt{a_n^2+b_n^2}
+$$
+
+$$
+\tan\varphi_n=-\frac{b_n}{a_n}
+$$
+
+> 若 $f(t)$ 为偶函数，则 $b_n=0$。  
+> 若 $f(t)$ 为奇函数，则 $a_n=0$。
+
+### 2. 指数形式
+
+$$
+f(t)=\sum_{n=-\infty}^{+\infty}F_n e^{jn\omega t}
+$$
+
+其中
+
+$$
+F_n=\frac{1}{T}\int_{t_0}^{t_0+T}f(t)e^{-jn\omega t}\,dt
+$$
+
+也可取积分区间为 $-T/2$ 到 $T/2$：
+
+$$
+F_n=\frac{1}{T}\int_{-T/2}^{T/2}f(t)e^{-jn\omega t}\,dt
+$$
+
+谱线长度与三角形式系数关系：
+
+$$
+|F_n|=\frac{1}{2}A_n=\frac{1}{2}\sqrt{a_n^2+b_n^2}\qquad (n\ne 0)
+$$
+
+---
+
+## 2.3 非周期信号的傅立叶变换
+
+### 1. 傅立叶变换
+
+$$
+F(\omega)=\int_{-\infty}^{+\infty}f(t)e^{-j\omega t}\,dt
+$$
+
+### 2. 傅立叶反变换
+
+$$
+f(t)=\frac{1}{2\pi}\int_{-\infty}^{+\infty}F(\omega)e^{j\omega t}\,d\omega
+$$
+
+记作
+
+$$
+f(t)\longleftrightarrow F(\omega)
+$$
+
+### 3. 频谱函数的极坐标形式
+
+$$
+F(\omega)=|F(\omega)|e^{j\varphi(\omega)}
+$$
+
+其中
+
+- $|F(\omega)|$：振幅频谱
+- $\varphi(\omega)$：相位频谱
+
+---
+
+## 2.4 欧拉公式与常用三角变换
+
+### 1. 欧拉公式
+
+$$
+e^{jx}=\cos x+j\sin x
+$$
+
+$$
+e^{-jx}=\cos x-j\sin x
+$$
+
+### 2. 三角函数化为指数形式
+
+$$
+\cos x=\frac{e^{jx}+e^{-jx}}{2}
+$$
+
+$$
+\sin x=\frac{e^{jx}-e^{-jx}}{2j}
+$$
+
+### 3. 积化和差公式（做题常用）
+
+$$
+\cos\alpha\cos\beta=\frac{1}{2}\big[\cos(\alpha+\beta)+\cos(\alpha-\beta)\big]
+$$
+
+$$
+\sin\alpha\cos\beta=\frac{1}{2}\big[\sin(\alpha+\beta)+\sin(\alpha-\beta)\big]
+$$
+
+$$
+\sin\alpha\sin\beta=\frac{1}{2}\big[\cos(\alpha-\beta)-\cos(\alpha+\beta)\big]
+$$
+
+---
+
+## 2.5 抽样函数 $S_a(x)$
+
+教材中定义
+
+$$
+S_a(x)=\frac{\sin x}{x}
+$$
+
+并约定
+
+$$
+S_a(0)=1
+$$
+
+常用零点：
+
+$$
+S_a(\pm k\pi)=0\qquad (k=1,2,3,\dots)
+$$
+
+下面给出其图形
+
+```{python}
+#| label: fig-sa-function
+#| fig-cap: "抽样函数 $S_a(x)=\\sin x/x$ 的图形"
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 定义 Sa(x)
+x = np.linspace(-4 * np.pi, 4 * np.pi, 4000)
+y = np.where(np.isclose(x, 0.0), 1.0, np.sin(x) / x)
+
+fig, ax = plt.subplots(figsize=(10, 5))
+
+# 绘制函数曲线
+ax.plot(x, y, linewidth=1.8)
+
+# 去掉封闭边框，只保留坐标轴
+ax.spines["top"].set_visible(False)
+ax.spines["right"].set_visible(False)
+ax.spines["bottom"].set_position(("data", 0))
+ax.spines["left"].set_position(("data", 0))
+
+# 标记零点
+zeros = np.array([
+    -3*np.pi, -2*np.pi, -1*np.pi,
+     1*np.pi,  2*np.pi,  3*np.pi
+])
+ax.plot(zeros, np.zeros_like(zeros), "o")
+
+labels = [
+    r"$(-3\pi,\ 0)$", r"$(-2\pi,\ 0)$", r"$(-\pi,\ 0)$",
+    r"$(\pi,\ 0)$",   r"$(2\pi,\ 0)$",  r"$(3\pi,\ 0)$"
+]
+
+for xi, lab in zip(zeros, labels):
+    ax.annotate(
+        lab,
+        xy=(xi, 0),
+        xytext=(0, 10),
+        textcoords="offset points",
+        ha="center",
+        fontsize=9
+    )
+
+# 标记点 (0,1)
+ax.plot([0], [1], "o")
+ax.annotate(
+    r"$(0,\ 1)$",
+    xy=(0, 1),
+    xytext=(8, 8),
+    textcoords="offset points",
+    fontsize=9
+)
+
+# 坐标轴与范围
+ax.set_xlim(-4*np.pi, 4*np.pi)
+ax.set_ylim(-0.3, 1.2)
+
+# 设置 x 轴刻度为 π 的整数倍
+xticks = np.arange(-4*np.pi, 4*np.pi + 0.1, np.pi)
+xtick_labels = [
+    r"$-4\pi$", r"$-3\pi$", r"$-2\pi$", r"$-\pi$",
+    r"$0$", r"$\pi$", r"$2\pi$", r"$3\pi$", r"$4\pi$"
+]
+ax.set_xticks(xticks)
+ax.set_xticklabels(xtick_labels)
+
+# y 轴刻度
+ax.set_yticks([-0.2, 0, 0.5, 1.0])
+
+# 给坐标轴加标签
+ax.text(4*np.pi + 0.3, 0.03, r"$x$", fontsize=12)
+ax.text(0.15, 1.12, r"$S_a(x)$", fontsize=12)
+
+plt.tight_layout()
+plt.show()
+```
+
+---
+
+## 2.6 常用傅立叶变换对（做题最常用）
+
+### 1. 单位冲激函数
+
+$$
+\delta(t)\longleftrightarrow 1
+$$
+
+$$
+1\longleftrightarrow 2\pi\delta(\omega)
+$$
+
+### 2. 移位冲激函数
+
+$$
+\delta(t-t_0)\longleftrightarrow e^{-j\omega t_0}
+$$
+
+### 3. 复指数信号
+
+$$
+e^{j\omega_0 t}\longleftrightarrow 2\pi\delta(\omega-\omega_0)
+$$
+
+$$
+e^{-j\omega_0 t}\longleftrightarrow 2\pi\delta(\omega+\omega_0)
+$$
+
+### 4. 余弦、正弦信号
+
+$$
+\cos\omega_0 t\longleftrightarrow \pi\big[\delta(\omega-\omega_0)+\delta(\omega+\omega_0)\big]
+$$
+
+$$
+\sin\omega_0 t\longleftrightarrow \frac{\pi}{j}\big[\delta(\omega-\omega_0)-\delta(\omega+\omega_0)\big]
+$$
+
+### 5. 矩形脉冲与 $S_a$ 函数
+
+若
+
+$$
+f(t)=
+\begin{cases}
+A, & |t|<\dfrac{\tau}{2}\\
+0, & |t|>\dfrac{\tau}{2}
+\end{cases}
+$$
+
+则
+
+$$
+F(\omega)=A\tau S_a\left(\frac{\omega\tau}{2}\right)
+$$
+
+反过来，
+
+$$
+S_a\left(\frac{\pi}{T}t\right)\longleftrightarrow
+\begin{cases}
+T, & |\omega|<\dfrac{\pi}{T}\\
+0, & |\omega|>\dfrac{\pi}{T}
+\end{cases}
+$$
+
+---
+
+## 2.7 能量谱密度
+
+### 1. 定义
+
+对能量信号，
+
+$$
+E=\int_{-\infty}^{+\infty}f^2(t)\,dt
+$$
+
+帕塞瓦尔公式为
+
+$$
+E=\frac{1}{2\pi}\int_{-\infty}^{+\infty}|F(\omega)|^2\,d\omega
+$$
+
+定义能量谱密度
+
+$$
+E_f(\omega)=|F(\omega)|^2
+$$
+
+因此
+
+$$
+E=\frac{1}{2\pi}\int_{-\infty}^{+\infty}E_f(\omega)\,d\omega
+$$
+
+---
+
+## 2.8 功率谱密度
+
+### 1. 截断函数
+
+对功率信号，引入截断函数
+
+$$
+f_T(t)=
+\begin{cases}
+f(t), & |t|\le T/2\\
+0, & \text{其他}
+\end{cases}
+$$
+
+其傅立叶变换记为 $F_T(\omega)$。
+
+### 2. 功率谱密度定义
+
+$$
+p_f(\omega)=\lim_{T\to\infty}\frac{|F_T(\omega)|^2}{T}
+$$
+
+### 3. 平均功率与功率谱密度关系
+
+$$
+P=\frac{1}{2\pi}\int_{-\infty}^{+\infty}p_f(\omega)\,d\omega
+$$
+
+### 4. 单频余弦 / 正弦的功率谱密度
+
+若
+
+$$
+f(t)=C\cos\omega_0 t
+$$
+
+或
+
+$$
+f(t)=C\sin\omega_0 t
+$$
+
+则
+
+$$
+p_f(\omega)=\frac{\pi C^2}{2}\big[\delta(\omega-\omega_0)+\delta(\omega+\omega_0)\big]
+$$
+
+---
+
+## 2.9 自相关函数
+
+### 1. 能量信号的自相关函数
+
+$$
+R(\tau)=\int_{-\infty}^{+\infty}f(t)f(t+\tau)\,dt
+$$
+
+并有
+
+$$
+R(\tau)\longleftrightarrow E_f(\omega)=|F(\omega)|^2
+$$
+
+### 2. 功率信号的自相关函数
+
+$$
+R(\tau)=\lim_{T\to\infty}\frac{1}{T}\int_{-T/2}^{T/2}f(t)f(t+\tau)\,dt
+$$
+
+并有
+
+$$
+R(\tau)\longleftrightarrow p_f(\omega)
+$$
+
+### 3. 单一余弦信号的自相关函数
+
+若
+
+$$
+f(t)=A\cos\omega_0 t
+$$
+
+则
+
+$$
+R(\tau)=\frac{A^2}{2}\cos\omega_0\tau
+$$
+
+---
+
+## 2.10 冲激函数的性质
+
+### 1. 定义性质
+
+$$
+\delta(t-t_0)=
+\begin{cases}
+\infty, & t=t_0\\
+0, & t\ne t_0
+\end{cases}
+$$
+
+且
+
+$$
+\int_{-\infty}^{+\infty}\delta(t-t_0)\,dt=1
+$$
+
+### 2. 抽样性质
+
+$$
+f(t)\delta(t-t_0)=f(t_0)\delta(t-t_0)
+$$
+
+$$
+\int_{-\infty}^{+\infty}f(t)\delta(t-t_0)\,dt=f(t_0)
+$$
+
+特别地，
+
+$$
+\int_{-\infty}^{+\infty}f(t)\delta(t)\,dt=f(0)
+$$
+
+### 3. 指数积分与冲激函数
+
+$$
+\int_{-\infty}^{+\infty}e^{-j\omega t}\,dt=2\pi\delta(\omega)
+$$
+
+$$
+\int_{-\infty}^{+\infty}e^{j\omega t}\,d\omega=2\pi\delta(t)
+$$
+
+---
+
+## 2.11 时移、频移、尺度变换（做题常用）
+
+### 1. 时移性质
+
+若
+
+$$
+f(t)\longleftrightarrow F(\omega)
+$$
+
+则
+
+$$
+f(t-t_0)\longleftrightarrow F(\omega)e^{-j\omega t_0}
+$$
+
+### 2. 频移性质
+
+$$
+f(t)e^{j\omega_0 t}\longleftrightarrow F(\omega-\omega_0)
+$$
+
+$$
+f(t)e^{-j\omega_0 t}\longleftrightarrow F(\omega+\omega_0)
+$$
+
+### 3. 尺度变换
+
+$$
+f(at)\longleftrightarrow \frac{1}{|a|}F\left(\frac{\omega}{a}\right)
+$$
+
+---
+
+## 2.12 卷积与乘积
+
+### 1. 卷积定义
+
+$$
+f_1(t)*f_2(t)=\int_{-\infty}^{+\infty}f_1(\tau)f_2(t-\tau)\,d\tau
+$$
+
+### 2. 卷积定理
+
+若
+
+$$
+f_1(t)\longleftrightarrow F_1(\omega),\qquad f_2(t)\longleftrightarrow F_2(\omega)
+$$
+
+则
+
+$$
+f_1(t)*f_2(t)\longleftrightarrow F_1(\omega)F_2(\omega)
+$$
+
+### 3. 时域乘积对应频域卷积
+
+$$
+f_1(t)f_2(t)\longleftrightarrow \frac{1}{2\pi}F_1(\omega)*F_2(\omega)
+$$
+
+---
+
+## 2.13 系统响应与传输函数
+
+对线性时不变系统，设输入、输出、单位冲激响应分别为
+
+- 输入：$v_i(t)$
+- 输出：$v_o(t)$
+- 单位冲激响应：$h(t)$
+
+则时域响应为
+
+$$
+v_o(t)=v_i(t)*h(t)
+$$
+
+若
+
+$$
+v_i(t)\longleftrightarrow V_i(\omega),\qquad
+v_o(t)\longleftrightarrow V_o(\omega),\qquad
+h(t)\longleftrightarrow H(\omega)
+$$
+
+则频域响应为
+
+$$
+V_o(\omega)=V_i(\omega)H(\omega)
+$$
+
+因此传输函数定义为
+
+$$
+H(\omega)=\frac{V_o(\omega)}{V_i(\omega)}
+$$
+
+---
+
+## 2.14 无失真传输条件
+
+若系统输出满足
+
+$$
+y(t)=kx(t-t_d)
+$$
+
+其中 $k$ 为常数，$t_d$ 为时延，则称为无失真传输。
+
+对其作傅立叶变换：
+
+$$
+F_y(\omega)=kF_x(\omega)e^{-j\omega t_d}
+$$
+
+因此系统传输函数必须满足
+
+$$
+H(\omega)=ke^{-j\omega t_d}
+$$
+
+于是无失真传输条件为：
+
+### 1. 幅频特性
+
+$$
+|H(\omega)|=k
+$$
+
+### 2. 相频特性
+
+$$
+\varphi(\omega)=-\omega t_d
+$$
+
+---
+
+## 2.15 幅度失真与相位失真
+
+### 1. 幅度失真
+
+若
+
+$$
+|H(\omega)|\ne k
+$$
+
+则不同频率分量增益不同，产生幅度失真。
+
+### 2. 相位失真
+
+若
+
+$$
+\varphi(\omega)\ne -\omega t_d
+$$
+
+则不同频率分量时延不同，产生相位失真。
+
+---
+
+## 2.16 本章做题时最常用的 8 个结论
+
+### 1. 矩形脉冲傅立叶变换
+
+$$
+\begin{cases}
+A, & |t|<\dfrac{\tau}{2}\\
+0, & |t|>\dfrac{\tau}{2}
+\end{cases}
+\Longleftrightarrow
+A\tau S_a\left(\frac{\omega\tau}{2}\right)
+$$
+
+### 2. 单个矩形脉冲自相关函数（宽度为 $\tau$，幅度为 $A$）
+
+$$
+R(\tau)=
+\begin{cases}
+A^2(\tau-|\tau|), & |\tau|\le \tau\\
+0, & |\tau|>\tau
+\end{cases}
+$$
+
+> 若题目中脉冲宽度就是 2，则写成
+> $$
+> R(\tau)=
+> \begin{cases}
+> A^2(2-|\tau|), & |\tau|\le 2\\
+> 0, & |\tau|>2
+> \end{cases}
+> $$
+
+### 3. 单个矩形脉冲的能量谱密度（宽度为 2，幅度为 $A$）
+
+$$
+E_f(\omega)=4A^2S_a^2(\omega)
+$$
+
+### 4. 单一余弦信号
+
+$$
+A\cos\omega_0 t \Longleftrightarrow \pi A\big[\delta(\omega-\omega_0)+\delta(\omega+\omega_0)\big]
+$$
+
+### 5. 单一余弦信号平均功率
+
+$$
+P=\frac{A^2}{2}
+$$
+
+### 6. 单一余弦信号自相关函数
+
+$$
+R(\tau)=\frac{A^2}{2}\cos\omega_0\tau
+$$
+
+### 7. 单一余弦信号功率谱密度
+
+$$
+p_f(\omega)=\frac{\pi A^2}{2}\big[\delta(\omega-\omega_0)+\delta(\omega+\omega_0)\big]
+$$
+
+### 8. 周期矩形脉冲第 $n$ 次谐波振幅
+
+对占空比为 $\tau/T$ 的周期矩形脉冲，其第 $n$ 次谐波振幅中含有因子
+
+$$
+\sin\frac{n\pi\tau}{T}
+$$
+
+因此当
+
+$$
+\sin\frac{n\pi\tau}{T}=0
+$$
+
+即
+
+$$
+n=k\frac{T}{\tau}\qquad (k=1,2,3,\dots)
+$$
+
+时，第 $n$ 次谐波不存在。
+
+---
+
+## 课后习题
+
+---
+
+### 1.
+
+一个周期矩形波的一个周期波形与另一个非周期矩形波的波形完全相同，其频谱有何区别？
+
+#### 解：
+
+周期矩形波和非周期矩形波虽然在一个周期内波形相同，但其频谱形式不同：
+
+- 周期矩形波的频谱是**离散频谱**；
+- 非周期矩形波的频谱是**连续频谱**。
+
+其中，非周期矩形波的频谱通常为连续的 $S_a$ 型包络；周期矩形波的频谱则是在各次谐波频率处对该连续包络进行抽样后得到的离散谱线。
+
+---
+
+### 2.
+
+证明 $f(t)=1$ 的傅立叶变换为 $F(\omega)=2\pi\delta(\omega)$。
+
+#### 解：
+
+由傅立叶反变换公式
+
+$$
+f(t)=\frac{1}{2\pi}\int_{-\infty}^{+\infty}F(\omega)e^{j\omega t}\,d\omega
+$$
+
+若取
+
+$$
+F(\omega)=2\pi\delta(\omega)
+$$
+
+则
+
+$$
+f(t)=\frac{1}{2\pi}\int_{-\infty}^{+\infty}2\pi\delta(\omega)e^{j\omega t}\,d\omega
+=\int_{-\infty}^{+\infty}\delta(\omega)e^{j\omega t}\,d\omega
+$$
+
+由冲激函数的抽样性质得
+
+$$
+f(t)=e^{j\cdot 0\cdot t}=1
+$$
+
+故
+
+$$
+\boxed{1\longleftrightarrow 2\pi\delta(\omega)}
+$$
+
+---
+
+### 3.
+
+求下列信号的振幅频谱，并绘出图形。
+
+（1）
+
+$$
+f(t)=S_a\!\left(\frac{\pi}{T}t\right)+2S_a\!\left[\frac{\pi}{T}(t-T)\right]+S_a\!\left[\frac{\pi}{T}(t-2T)\right]
+$$
+
+（2）
+
+$$
+f(t)=S_a\!\left(\frac{\pi}{T}t\right)-S_a\!\left[\frac{\pi}{T}(t-2T)\right]
+$$
+
+#### 解：
+
+先利用基本变换对
+
+$$
+S_a\!\left(\frac{\pi}{T}t\right)
+\longleftrightarrow
+F_0(\omega)=
+\begin{cases}
+T, & |\omega|<\dfrac{\pi}{T} \\
+0, & |\omega|>\dfrac{\pi}{T}
+\end{cases}
+$$
+
+再利用时移性质
+
+$$
+f(t-t_0)\longleftrightarrow F(\omega)e^{-j\omega t_0}
+$$
+
+#### （1）
+
+$$
+F(\omega)=F_0(\omega)+2F_0(\omega)e^{-j\omega T}+F_0(\omega)e^{-j2\omega T}
+$$
+
+即
+
+$$
+F(\omega)=F_0(\omega)\left(1+2e^{-j\omega T}+e^{-j2\omega T}\right)
+$$
+
+化简得
+
+$$
+F(\omega)=4F_0(\omega)e^{-j\omega T}\cos^2\frac{\omega T}{2}
+$$
+
+所以振幅频谱为
+
+$$
+|F(\omega)|=
+\begin{cases}
+4T\cos^2\dfrac{\omega T}{2}, & |\omega|<\dfrac{\pi}{T} \\
+0, & |\omega|>\dfrac{\pi}{T}
+\end{cases}
+$$
+
+#### （2）
+
+$$
+F(\omega)=F_0(\omega)-F_0(\omega)e^{-j2\omega T}
+$$
+
+即
+
+$$
+F(\omega)=F_0(\omega)\left(1-e^{-j2\omega T}\right)
+$$
+
+化简得
+
+$$
+F(\omega)=2jF_0(\omega)e^{-j\omega T}\sin\omega T
+$$
+
+所以振幅频谱为
+
+$$
+|F(\omega)|=
+\begin{cases}
+2T|\sin\omega T|, & |\omega|<\dfrac{\pi}{T} \\
+0, & |\omega|>\dfrac{\pi}{T}
+\end{cases}
+$$
+
+---
+
+### 4.
+
+一升余弦脉冲信号的表示式为
+
+$$
+f(t)=\frac{E}{2}\left(1+\cos\frac{\pi t}{T}\right),\qquad 0\le |t|\le T
+$$
+
+试求其频谱。
+
+#### 解：
+
+先写成分段形式
+
+$$
+f(t)=
+\begin{cases}
+\dfrac{E}{2}\left(1+\cos\dfrac{\pi t}{T}\right), & |t|\le T \\[6pt]
+0, & |t|>T
+\end{cases}
+$$
+
+其傅立叶变换为
+
+$$
+F(\omega)=\int_{-\infty}^{+\infty}f(t)e^{-j\omega t}\,dt
+=\frac{E}{2}\int_{-T}^{T}\left(1+\cos\frac{\pi t}{T}\right)e^{-j\omega t}\,dt
+$$
+
+整理可得
+
+$$
+F(\omega)
+=
+\frac{E\left(\frac{\pi}{T}\right)^2\sin\omega T}
+{\omega\left[\left(\frac{\pi}{T}\right)^2-\omega^2\right]}
+$$
+
+写成 $S_a$ 形式为
+
+$$
+\boxed{
+F(\omega)=\frac{E\pi^2 T\,S_a(\omega T)}{\pi^2-\omega^2T^2}
+}
+$$
+
+---
+
+### 5.
+
+设有两矩形脉冲 $f_1(t)$、$f_2(t)$ 如图 P2-1 所示，试求 $f_1(t)*f_2(t)$，并绘出图形。
+
+#### 解：
+
+设
+
+$$
+f_1(t)=
+\begin{cases}
+K_1, & |t|\le \dfrac{\tau_1}{2}\\[4pt]
+0, & |t|>\dfrac{\tau_1}{2}
+\end{cases}
+$$
+
+$$
+f_2(t)=
+\begin{cases}
+K_2, & |t|\le \dfrac{\tau_2}{2}\\[4pt]
+0, & |t|>\dfrac{\tau_2}{2}
+\end{cases}
+$$
+
+根据卷积定义，
+
+$$
+(f_1*f_2)(t)=\int_{-\infty}^{+\infty}f_1(\lambda)f_2(t-\lambda)\,d\lambda
+$$
+
+由图可知取 $\tau_2>\tau_1$，则卷积结果为
+
+$$
+(f_1*f_2)(t)=
+\begin{cases}
+0, & |t|\ge \dfrac{\tau_1+\tau_2}{2}\\[8pt]
+K_1K_2\left(t+\dfrac{\tau_1+\tau_2}{2}\right),
+& -\dfrac{\tau_1+\tau_2}{2}<t<-\dfrac{\tau_2-\tau_1}{2}\\[10pt]
+K_1K_2\tau_1,
+& -\dfrac{\tau_2-\tau_1}{2}\le t\le \dfrac{\tau_2-\tau_1}{2}\\[10pt]
+K_1K_2\left(\dfrac{\tau_1+\tau_2}{2}-t\right),
+& \dfrac{\tau_2-\tau_1}{2}<t<\dfrac{\tau_1+\tau_2}{2}
+\end{cases}
+$$
+
+其图形为一对称梯形：
+
+- 底宽：$\tau_1+\tau_2$
+- 顶宽：$\tau_2-\tau_1$
+- 高度：$K_1K_2\tau_1$
+
+---
+
+### 6.
+
+试确定下列信号的平均功率和功率谱密度。
+
+（1）
+
+$$
+A\cos(2000\pi t)+B\sin(200\pi t)
+$$
+
+（2）
+
+$$
+[A+\sin(200\pi t)]\cos(2000\pi t)
+$$
+
+（3）
+
+$$
+A\cos(200\pi t)\cos(2000\pi t)
+$$
+
+#### 解：
+
+### （1）
+
+$$
+f(t)=A\cos(2000\pi t)+B\sin(200\pi t)
+$$
+
+平均功率为
+
+$$
+P=\frac{A^2}{2}+\frac{B^2}{2}
+$$
+
+即
+
+$$
+\boxed{P=\frac{A^2+B^2}{2}}
+$$
+
+功率谱密度为
+
+$$
+\boxed{
+p_f(\omega)=\frac{\pi A^2}{2}\big[\delta(\omega-2000\pi)+\delta(\omega+2000\pi)\big]
++\frac{\pi B^2}{2}\big[\delta(\omega-200\pi)+\delta(\omega+200\pi)\big]
+}
+$$
+
+### （2）
+
+先展开：
+
+$$
+f(t)=A\cos(2000\pi t)+\sin(200\pi t)\cos(2000\pi t)
+$$
+
+由
+
+$$
+\sin\alpha\cos\beta=\frac12[\sin(\alpha+\beta)+\sin(\alpha-\beta)]
+$$
+
+得
+
+$$
+f(t)=A\cos(2000\pi t)+\frac12\sin(2200\pi t)-\frac12\sin(1800\pi t)
+$$
+
+平均功率为
+
+$$
+P=\frac{A^2}{2}+\frac{(1/2)^2}{2}+\frac{(1/2)^2}{2}
+=\frac{A^2}{2}+\frac14
+$$
+
+即
+
+$$
+\boxed{P=\frac{A^2}{2}+\frac14}
+$$
+
+功率谱密度为
+
+$$
+\boxed{
+p_f(\omega)=
+\frac{\pi A^2}{2}\big[\delta(\omega-2000\pi)+\delta(\omega+2000\pi)\big]
++\frac{\pi}{8}\big[\delta(\omega-2200\pi)+\delta(\omega+2200\pi)\big]
++\frac{\pi}{8}\big[\delta(\omega-1800\pi)+\delta(\omega+1800\pi)\big]
+}
+$$
+
+### （3）
+
+由
+
+$$
+\cos\alpha\cos\beta=\frac12[\cos(\alpha+\beta)+\cos(\alpha-\beta)]
+$$
+
+得
+
+$$
+f(t)=\frac{A}{2}\big[\cos(2200\pi t)+\cos(1800\pi t)\big]
+$$
+
+平均功率为
+
+$$
+P=\frac{(A/2)^2}{2}+\frac{(A/2)^2}{2}=\frac{A^2}{4}
+$$
+
+即
+
+$$
+\boxed{P=\frac{A^2}{4}}
+$$
+
+功率谱密度为
+
+$$
+\boxed{
+p_f(\omega)=
+\frac{\pi A^2}{8}\big[\delta(\omega-2200\pi)+\delta(\omega+2200\pi)\big]
++\frac{\pi A^2}{8}\big[\delta(\omega-1800\pi)+\delta(\omega+1800\pi)\big]
+}
+$$
+
+---
+
+### 7.
+
+求单个矩形脉冲（脉幅为 $A$，脉宽为 2）的自相关函数和能量谱密度。
+
+#### 解：
+
+设矩形脉冲为
+
+$$
+f(t)=
+\begin{cases}
+A, & x<t<x+2\\
+0, & \text{其他}
+\end{cases}
+$$
+
+其中 $x$ 为脉冲起始时刻。
+
+#### （1）自相关函数
+
+能量信号的自相关函数定义为
+
+$$
+R(\tau)=\int_{-\infty}^{+\infty}f(t)f(t+\tau)\,dt
+$$
+
+由区间交集可得
+
+$$
+\boxed{
+R(\tau)=
+\begin{cases}
+A^2(2-|\tau|), & |\tau|\le 2\\
+0, & |\tau|>2
+\end{cases}
+}
+$$
+
+#### （2）能量谱密度
+
+先求傅立叶变换：
+
+$$
+F(\omega)=\int_{-\infty}^{+\infty}f(t)e^{-j\omega t}\,dt
+=A\int_x^{x+2}e^{-j\omega t}\,dt
+$$
+
+积分得
+
+$$
+F(\omega)=2Ae^{-j\omega(x+1)}S_a(\omega)
+$$
+
+能量谱密度定义为
+
+$$
+E_f(\omega)=|F(\omega)|^2
+$$
+
+因此
+
+$$
+\boxed{
+E_f(\omega)=4A^2S_a^2(\omega)
+}
+$$
+
+也可写成
+
+$$
+\boxed{
+E_f(\omega)=4A^2\left(\frac{\sin\omega}{\omega}\right)^2
+}
+$$
+
+---
+
+### 8.
+
+设周期信号为
+
+$$
+f(t)=A\cos\omega_0 t
+$$
+
+试求它的自相关函数和功率谱密度。
+
+#### 解：
+
+#### （1）自相关函数
+
+功率信号的自相关函数定义为
+
+$$
+R(\tau)=\lim_{T\to\infty}\frac{1}{T}\int_{-T/2}^{T/2}f(t)f(t+\tau)\,dt
+$$
+
+代入
+
+$$
+f(t)=A\cos\omega_0 t
+$$
+
+并用公式
+
+$$
+\cos\alpha\cos\beta=\frac12[\cos(\alpha-\beta)+\cos(\alpha+\beta)]
+$$
+
+可得
+
+$$
+\boxed{
+R(\tau)=\frac{A^2}{2}\cos\omega_0\tau
+}
+$$
+
+#### （2）功率谱密度
+
+由维纳—辛钦定理，
+
+$$
+R(\tau)\longleftrightarrow p_f(\omega)
+$$
+
+于是
+
+$$
+\boxed{
+p_f(\omega)=\frac{\pi A^2}{2}\big[\delta(\omega-\omega_0)+\delta(\omega+\omega_0)\big]
+}
+$$
+
+---
+
+### 12.
+
+当图 P2-3 中的脉冲周期等于不同的脉冲宽度，例如，$T=5\tau,\ 4\tau,\ 3\tau,\ 2\tau,\ 1\tau$ 时，分别求出此信号各次谐波中没有哪些谐波分量。
+
+#### 解：
+
+设周期矩形脉冲在一个周期内为
+
+$$
+f(t)=
+\begin{cases}
+1, & 0<t<\tau\\
+0, & \tau<t<T
+\end{cases}
+$$
+
+其第 $n$ 次谐波振幅可化为
+
+$$
+A_n=\frac{2}{n\pi}\left|\sin\frac{n\pi\tau}{T}\right|
+$$
+
+因此，当
+
+$$
+\sin\frac{n\pi\tau}{T}=0
+$$
+
+时，第 $n$ 次谐波不存在，即
+
+$$
+\frac{n\pi\tau}{T}=k\pi\qquad (k=1,2,3,\dots)
+$$
+
+所以缺少谐波的条件为
+
+$$
+\boxed{n=k\frac{T}{\tau}}
+$$
+
+分别代入：
+
+- 当 $T=5\tau$ 时，缺少 $5,10,15,\dots$ 次谐波；
+- 当 $T=4\tau$ 时，缺少 $4,8,12,\dots$ 次谐波；
+- 当 $T=3\tau$ 时，缺少 $3,6,9,\dots$ 次谐波；
+- 当 $T=2\tau$ 时，缺少 $2,4,6,\dots$ 次谐波，即偶次谐波全部消失；
+- 当 $T=\tau$ 时，所有非零次谐波都没有，只剩直流分量。

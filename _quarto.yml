@@ -1,0 +1,44 @@
+project:
+  type: book
+  output-dir: _book
+
+book:
+  title: "数据通信原理学习笔记"
+  author: "ofb77"
+  chapters:
+    - index.qmd
+    - 01-introduction.qmd
+    - 02-fundamentals of communication system analysis.qmd
+    - 03-channel.qmd
+    - 04-Digital transmission of analog signals.qmd
+    - 05-Multiplexing technology.qmd
+
+lang: zh
+jupyter: python3
+editor:
+  render-on-save: true
+
+format:
+  html:
+    theme: 
+      light: flatly
+      dark: darkly
+    respect-user-color-scheme: true
+    toc: true
+    toc-depth: 3
+    number-sections: false
+    fig-cap-location: bottom
+    html-math-method: mathjax
+    css: styles.css
+    grid:
+      sidebar-width: 250px
+      body-width: 980px
+      margin-width: 220px
+      gutter-width: 1.25rem
+
+execute:
+  freeze: auto
+  cache: true
+  echo: false
+  warning: false
+  message: false

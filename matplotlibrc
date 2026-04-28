@@ -1,0 +1,5 @@
+# Project-wide defaults for Matplotlib figures rendered by Quarto.
+# Noto Sans CJK JP is available on this machine and contains Chinese glyphs.
+font.family: sans-serif
+font.sans-serif: Noto Sans CJK JP, Droid Sans Fallback, DejaVu Sans
+axes.unicode_minus: False

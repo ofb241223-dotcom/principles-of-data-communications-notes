@@ -1,0 +1,10 @@
+_book/
+_freeze/
+.quarto/
+.venv/
+.codex
+.playwright-mcp/
+.ipynb_checkpoints/
+*.quarto_ipynb
+*.quarto_ipynb_*
+.jupyter_cache/

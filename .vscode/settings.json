@@ -1,0 +1,5 @@
+{
+  "quarto.render.renderOnSave": true,
+  "quarto.render.previewType": "internal",
+  "quarto.render.previewReveal": true
+}
