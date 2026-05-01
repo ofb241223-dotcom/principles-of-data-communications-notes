@@ -12,6 +12,7 @@ book:
     - 03-channel.qmd
     - 04-Digital transmission of analog signals.qmd
     - 05-Multiplexing technology.qmd
+    - 06-Digital baseband transmission.qmd
 
 lang: zh
 jupyter: python3

@@ -8,3 +8,6 @@ _freeze/
 *.quarto_ipynb
 *.quarto_ipynb_*
 .jupyter_cache/
+
+/.quarto/
+**/*.quarto_ipynb
