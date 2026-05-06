@@ -13,6 +13,7 @@ book:
     - 04-Digital transmission of analog signals.qmd
     - 05-Multiplexing technology.qmd
     - 06-Digital baseband transmission.qmd
+    - 09-Error control code.qmd
 
 lang: zh
 jupyter: python3
