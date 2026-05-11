@@ -7,12 +7,13 @@ book:
   author: "ofb77"
   chapters:
     - index.qmd
-    - 01-introduction.qmd
-    - 02-fundamentals of communication system analysis.qmd
-    - 03-channel.qmd
+    - 01-Introduction.qmd
+    - 02-Fundamentals of communication system analysis.qmd
+    - 03-Channel.qmd
     - 04-Digital transmission of analog signals.qmd
     - 05-Multiplexing technology.qmd
     - 06-Digital baseband transmission.qmd
+    - 08-Sync.qmd
     - 09-Error control code.qmd
     - 10-Interfaces and Specifications for Data Communication.qmd
 
