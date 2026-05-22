@@ -13,6 +13,7 @@ book:
     - 04-Digital transmission of analog signals.qmd
     - 05-Multiplexing technology.qmd
     - 06-Digital baseband transmission.qmd
+    - 07-Digital frequency band transmission.qmd
     - 08-Sync.qmd
     - 09-Error control code.qmd
     - 10-Interfaces and Specifications for Data Communication.qmd
